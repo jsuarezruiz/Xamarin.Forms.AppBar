@@ -1,6 +1,6 @@
 # AppBar
 
-An app bar consists of a toolbar.
+An app bar consists of a Xamarin.Forms toolbar.
 
 ## Copyright and license
 
