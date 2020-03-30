@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.AppBar"
+    x:Class="AppBar.Sample.Views.EnableDisableToolBarItemsGallery"
+    Title="Enable/Disable ToolBarItems Gallery">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            x:Name="FavToolbarItem"
+            IconImageSource="heart.png"
+            Text="Favourite"
+            Clicked="OnFavToolbarItemClicked"/>
+    </ContentPage.ToolbarItems>
+   <ContentPage.Content>
+        <StackLayout>
+            <controls:AppBar />
+            <Button
+                Text="Enable ToolBarItem"
+                Clicked="OnEnableToolBarItemClicked"/>
+            <Button
+                Text="Disable ToolBarItem"
+                Clicked="OnDisableToolBarItemClicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.AppBar"
+    x:Class="AppBar.Sample.Views.UpdateToolBarItemGallery"
+    Title="Update ToolBarItem Gallery">
+   <ContentPage.ToolbarItems>
+        <ToolbarItem
+            x:Name="FavToolbarItem"
+            IconImageSource="heart.png"
+            Text="Favourite"
+            Clicked="OnFavToolbarItemClicked"/>
+    </ContentPage.ToolbarItems>
+   <ContentPage.Content>
+        <StackLayout>
+            <controls:AppBar />
+            <Button
+                Text="Change Icon"
+                Clicked="OnChangeIconClicked"/>
+            <Button
+                Text="Remove Icon"
+                Clicked="OnRemoveIconClicked"/>
+            <Button
+                Text="Change Text"
+                Clicked="OnChangeTextClicked"/>
+            <Button
+                Text="Clear Text"
+                Clicked="OnClearTextClicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

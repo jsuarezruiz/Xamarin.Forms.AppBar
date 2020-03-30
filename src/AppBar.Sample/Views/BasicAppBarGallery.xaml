@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.AppBar"
+    x:Class="AppBar.Sample.Views.BasicAppBarGallery"
+    Title="Basic AppBar Gallery">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            IconImageSource="heart.png"
+            Text="Favourite"/>
+        <ToolbarItem
+            IconImageSource="search.png"
+            Text="Search"/>
+        <!--
+        <ToolbarItem
+            Order="Secondary"
+            IconImageSource="settings.png"
+            Text="Settings"/>
+        -->
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <controls:AppBar />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

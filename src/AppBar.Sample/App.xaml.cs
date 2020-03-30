@@ -9,7 +9,7 @@ namespace AppBar.Sample
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainView());
+            MainPage = new CustomNavigationPage(new MainView());
         }
 
         protected override void OnStart()

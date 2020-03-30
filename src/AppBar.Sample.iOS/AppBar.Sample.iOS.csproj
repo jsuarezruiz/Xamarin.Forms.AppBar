@@ -132,5 +132,11 @@
       <Name>AppBar.Sample</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\heart.png" />
+    <BundleResource Include="Resources\search.png" />
+    <BundleResource Include="Resources\background.gif" />
+    <BundleResource Include="Resources\materialdesignicons-webfont.ttf" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

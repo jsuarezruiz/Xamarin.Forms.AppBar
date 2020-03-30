@@ -2,7 +2,48 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="AppBar.Sample.Views.MainView">
+    x:Class="AppBar.Sample.Views.MainView"
+    Title="AppBar Gallery">
     <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <Button
+                    x:Name="BasicAppBarBtn"
+                    Text="Basic AppBar Gallery"
+                    Clicked="OnBasicAppBarBtnClicked"/>
+                <Button
+                    x:Name="AddRemoveToolBarItemsBtn"
+                    Text="Add/Remove ToolbarItems Gallery"
+                    Clicked="OnAddRemoveToolBarItemsBtnClicked"/>
+                <Button
+                    x:Name="EnableDisableToolBarItemsBtn"
+                    Text="Enable/Disable ToolbarItems Gallery"
+                    Clicked="OnEnableDisableToolBarItemsBtnClicked"/>
+                <Button
+                    x:Name="AppBarEventsBtn"
+                    Text="AppBar Events Gallery"
+                    Clicked="OnAppBarEventsBtnClicked"/>
+                <Button
+                    x:Name="UpdateToolBarItemBtn"
+                    Text="Update ToolBarItem Gallery"
+                    Clicked="OnUpdateToolBarItemBtnClicked"/>
+                <Button
+                    x:Name="AppBarHeightBtn"
+                    Text="AppBar Height Gallery"
+                    Clicked="OnAppBarHeightBtnClicked"/>
+                <Button
+                    x:Name="AppBarBackgroundImageBtn"
+                    Text="AppBar BarBackgroundImage Gallery"
+                    Clicked="OnAppBarBackgroundImageBtnClicked"/>
+                <Button
+                    x:Name="TitleViewBtn"
+                    Text="TitleView Gallery"
+                    Clicked="OnTitleViewBtnClicked"/>
+                <Button
+                    x:Name="ScrollBehaviorBtn"
+                    Text="ScrollBehavior Gallery (Experimental)"
+                    Clicked="OnScrollBehaviorBtnClicked"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

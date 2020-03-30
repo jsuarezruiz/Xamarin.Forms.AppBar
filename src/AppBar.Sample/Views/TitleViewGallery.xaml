@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.AppBar"
+    x:Class="AppBar.Sample.Views.TitleViewGallery"
+    Title="TitleView Gallery">
+   <ContentPage.ToolbarItems>
+        <ToolbarItem
+            IconImageSource="heart.png"
+            Text="Favourite"/>
+        <ToolbarItem
+            IconImageSource="search.png"
+            Text="Search"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <controls:AppBar
+                BarHeight="120"
+                BarBackgroundColor="Transparent"
+                BorderColor="Transparent">
+                <controls:AppBar.BarBackgroundView>
+                    <BoxView
+                        Color="Black"
+                        CornerRadius="0, 0, 24, 24"/>
+                </controls:AppBar.BarBackgroundView>
+                <controls:AppBar.TitleView>
+                    <Grid>
+                        <Grid.Margin>
+                            <OnPlatform x:TypeArguments="Thickness">
+                                <On Platform="iOS" Value="12, 60, 12, 12" />
+                                <On Platform="Android" Value="12, 72, 12, 12" />
+                            </OnPlatform>
+                        </Grid.Margin>
+                        <SearchBar
+                            BackgroundColor="White"/>
+                    </Grid>
+                </controls:AppBar.TitleView>
+            </controls:AppBar>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.AppBar"
+    x:Class="AppBar.Sample.Views.BackgroundImageGallery"
+    Title="AppBar BackgroundImage Gallery">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            IconImageSource="heart.png"
+            Text="Favourite"/>
+        <ToolbarItem
+            IconImageSource="search.png"
+            Text="Search"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <controls:AppBar
+                BarBackgroundColor="Black"
+                BarBackgroundImage="background.gif" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
