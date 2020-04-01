@@ -2,18 +2,24 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:controls="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.AppBar"
+    xmlns:controls="clr-namespace:Xamarin.Forms.AppBar;assembly=Xamarin.Forms.AppBar"
     x:Class="AppBar.Sample.Views.AddRemoveToolBarItemsGallery"
     Title="Add/Remove ToolBarItems Gallery">
     <ContentPage.Content>
         <StackLayout>
             <controls:AppBar />
             <Button
-                Text="Add ToolBarItem"
-                Clicked="OnAddToolBarItemClicked"/>
+                Text="Add Primary ToolBarItem"
+                Clicked="OnAddPrimaryToolBarItemClicked"/>
             <Button
-                Text="Remove ToolBarItem"
-                Clicked="OnRemoveToolBarItemClicked"/>
+                Text="Remove Primary ToolBarItem"
+                Clicked="OnRemovePrimaryToolBarItemClicked"/>
+            <Button
+                Text="Add Secondary ToolBarItem"
+                Clicked="OnAddSecondaryToolBarItemClicked"/>
+            <Button
+                Text="Remove Secondary ToolBarItem"
+                Clicked="OnRemoveSecondaryToolBarItemClicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

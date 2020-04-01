@@ -131,6 +131,10 @@
       <Project>{7A9A2031-5FC1-4225-B071-C330438E6D49}</Project>
       <Name>AppBar.Sample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Xamarin.Forms.AppBar.iOS\Xamarin.Forms.AppBar.iOS.csproj">
+      <Project>{8EE0F499-CEC8-4C9D-8999-7250D6F4A2A3}</Project>
+      <Name>Xamarin.Forms.AppBar.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\heart.png" />

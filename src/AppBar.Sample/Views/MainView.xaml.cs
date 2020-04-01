@@ -54,5 +54,10 @@ namespace AppBar.Sample.Views
         {
             Navigation.PushAsync(new ScrollBehaviorGallery());
         }
+
+        void OnPopupBtnClicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new PopupGallery());
+        }
     }
 }

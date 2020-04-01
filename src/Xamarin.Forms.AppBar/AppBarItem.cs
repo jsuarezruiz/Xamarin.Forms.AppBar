@@ -3,15 +3,17 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace Xamarin.Forms
+namespace Xamarin.Forms.AppBar
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal class AppBarItem : Grid
     {
+        ToolbarItemOrder _toolbarItemOrder;
         Image _appbarItemIcon;
         Label _appbarItemText;
         RowDefinition _appbarItemIconRow;
         RowDefinition _appbarItemTextRow;
+        string _originalText;
 
         public AppBarItem()
         {
@@ -63,6 +65,21 @@ namespace Xamarin.Forms
         static void OnTextColorChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((AppBarItem)bindable).UpdateTextColor((Color)newValue);
+        }
+
+        public static readonly BindableProperty OrderProperty =
+           BindableProperty.Create(nameof(Order), typeof(ToolbarItemOrder), typeof(AppBarItem), ToolbarItemOrder.Default,
+               propertyChanged: OnOrderChanged);
+
+        public ToolbarItemOrder Order
+        {
+            get => (ToolbarItemOrder)GetValue(OrderProperty);
+            set => SetValue(OrderProperty, value);
+        }
+
+        static void OnOrderChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((AppBarItem)bindable).UpdateOrder((ToolbarItemOrder)newValue);
         }
 
         public static readonly BindableProperty CommandProperty =
@@ -145,16 +162,20 @@ namespace Xamarin.Forms
 
         void UpdateText(string text)
         {
-            if (Device.RuntimePlatform == Device.Android)
-                text = text.ToUpper();
-
-            _appbarItemText.Text = text;
+            _originalText = text;
+            _appbarItemText.Text = _originalText;
             UpdateLayout();
         }
 
         void UpdateTextColor(Color textColor)
         {
             _appbarItemText.TextColor = textColor;
+        }
+
+        void UpdateOrder(ToolbarItemOrder toolbarItemOrder)
+        {
+            _toolbarItemOrder = toolbarItemOrder;
+            UpdateLayout();
         }
 
         void UpdateLayout()
@@ -170,6 +191,29 @@ namespace Xamarin.Forms
                 _appbarItemText.IsVisible = false;
                 _appbarItemIconRow.Height = AppBarSizes.GetToolBarItemSize();
                 _appbarItemTextRow.Height = GridLength.Auto;
+                SetRowSpan(_appbarItemText, 1);
+            }
+
+            if (_toolbarItemOrder == ToolbarItemOrder.Secondary)
+            {
+                _appbarItemText.Text = _originalText;
+                _appbarItemText.HorizontalOptions = LayoutOptions.Start;
+                _appbarItemText.Margin = new Thickness(12, 0, 0, 12);
+            }
+            else
+            {
+                if (Device.RuntimePlatform == Device.Android && !string.IsNullOrEmpty(_originalText))
+                {
+                    _appbarItemText.Text = _originalText.ToUpper();
+                }
+
+                if (IconImageSource == null || IconImageSource.IsEmpty)
+                {
+                    SetRow(_appbarItemText, 0);
+                    SetRowSpan(_appbarItemText, 2);
+                }
+
+                _appbarItemText.HorizontalOptions = LayoutOptions.Center;
             }
         }
 

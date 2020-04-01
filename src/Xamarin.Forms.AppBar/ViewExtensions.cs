@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Xamarin.Forms
+namespace Xamarin.Forms.AppBar
 {
     public static class ViewExtensions
     {
+        public static T FindParentOfType<T>(this VisualElement element)
+        {
+            var parent = element.GetParentsPath().OfType<T>().FirstOrDefault();
+            return parent;
+        }
+
         public static IEnumerable<T> GetChildrenOfType<T>(this Element element) where T : Element
         {
             var properties = element.GetType().GetRuntimeProperties();
@@ -52,6 +58,17 @@ namespace Xamarin.Forms
                         }
                     }
                 }
+            }
+        }
+
+        internal static IEnumerable<Element> GetParentsPath(this VisualElement self)
+        {
+            Element current = self;
+
+            while (!Application.IsApplicationOrNull(current.RealParent))
+            {
+                current = current.RealParent;
+                yield return current;
             }
         }
     }

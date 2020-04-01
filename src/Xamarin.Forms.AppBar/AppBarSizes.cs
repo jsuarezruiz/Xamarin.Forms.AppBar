@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Xamarin.Forms
+namespace Xamarin.Forms.AppBar
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class AppBarSizes
@@ -66,6 +66,11 @@ namespace Xamarin.Forms
                 return "\uF141";
 
             return string.Empty;
+        }
+
+        public static string GetRightItemsGlyph()
+        {
+            return "\uF1D9";
         }
 
         public static string GetDefaultBackButtonTitle()

@@ -104,6 +104,10 @@
       <Project>{7A9A2031-5FC1-4225-B071-C330438E6D49}</Project>
       <Name>AppBar.Sample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Xamarin.Forms.AppBar.Android\Xamarin.Forms.AppBar.Android.csproj">
+      <Project>{6991B1A2-2235-4819-ADD1-58575A5C0CA6}</Project>
+      <Name>Xamarin.Forms.AppBar.Android</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Roboto-Medium.ttf" />

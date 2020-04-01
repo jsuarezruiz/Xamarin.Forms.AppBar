@@ -6,7 +6,11 @@
     Title="AppBar Gallery">
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout>
+            <StackLayout
+                Padding="12">
+                <Label
+                    FontSize="Title"
+                    Text="AppBar"/>
                 <Button
                     x:Name="BasicAppBarBtn"
                     Text="Basic AppBar Gallery"
@@ -43,6 +47,13 @@
                     x:Name="ScrollBehaviorBtn"
                     Text="ScrollBehavior Gallery (Experimental)"
                     Clicked="OnScrollBehaviorBtnClicked"/>
+                <Label
+                    FontSize="Title"
+                    Text="Popup"/>
+                <Button
+                    x:Name="PopupBtn"
+                    Text="Popup Gallery"
+                    Clicked="OnPopupBtnClicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

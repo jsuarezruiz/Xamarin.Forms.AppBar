@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace AppBar.Sample.Views
@@ -12,7 +13,7 @@ namespace AppBar.Sample.Views
             NavigationPage.SetHasNavigationBar(this, false);
         }
 
-        void OnAddToolBarItemClicked(object sender, EventArgs e)
+        void OnAddPrimaryToolBarItemClicked(object sender, EventArgs e)
         {
             var toolBarItemIndex = ToolbarItems.Count + 1;
 
@@ -21,13 +22,42 @@ namespace AppBar.Sample.Views
             ToolbarItems.Add(toolbarItem);
         }
 
-        void OnRemoveToolBarItemClicked(object sender, EventArgs e)
+        void OnRemovePrimaryToolBarItemClicked(object sender, EventArgs e)
         {
-            if (ToolbarItems.Count == 0)
+            var primaryToolbarItems = ToolbarItems.Where(i => i.Order != ToolbarItemOrder.Secondary).ToList();
+
+            if (primaryToolbarItems.Count == 0)
                 return;
 
-            var toolBarItemIndex = ToolbarItems.Count - 1;
-            ToolbarItems.RemoveAt(toolBarItemIndex);
+            var toolBarItemIndex = primaryToolbarItems.Count - 1;
+            var toolbarItem = primaryToolbarItems[toolBarItemIndex];
+
+            ToolbarItems.Remove(toolbarItem);
+        }
+
+        void OnAddSecondaryToolBarItemClicked(object sender, EventArgs e)
+        {
+            var toolBarItemIndex = ToolbarItems.Count + 1;
+
+            var toolbarItem = new ToolbarItem($"Item {toolBarItemIndex}", GetRandomIcon(), OnToolbarClicked)
+            {
+                Order = ToolbarItemOrder.Secondary
+            };
+
+            ToolbarItems.Add(toolbarItem);
+        }
+
+        void OnRemoveSecondaryToolBarItemClicked(object sender, EventArgs e)
+        {
+            var secondaryToolbarItems = ToolbarItems.Where(i => i.Order == ToolbarItemOrder.Secondary).ToList();
+
+            if (secondaryToolbarItems.Count == 0)
+                return;
+
+            var toolBarItemIndex = secondaryToolbarItems.Count - 1;
+            var toolbarItem = secondaryToolbarItems[toolBarItemIndex];
+
+            ToolbarItems.Remove(toolbarItem);
         }
 
         void OnToolbarClicked()

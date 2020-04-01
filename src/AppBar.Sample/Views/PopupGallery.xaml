@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AppBar.Sample.Views.PopupGallery"
+    Title="Popup Gallery">
+  <ContentPage.Content>
+         <StackLayout>
+             <StackLayout>
+                 <Label
+                     Text="Dialog Width:" />
+                 <Slider
+                     x:Name="WidthSlider"
+                     MinimumTrackColor="MediumPurple"
+                     Minimum="0"
+                     Maximum="1000"
+                     MaximumTrackColor="Purple"
+                     Value="600" />
+             </StackLayout>
+             <StackLayout>
+                 <Label
+                     Text="Dialog Height:" />
+                 <Slider
+                     x:Name="HeightSlider"
+                     MinimumTrackColor="MediumPurple"
+                     Minimum="0"
+                     Maximum="1500"
+                     MaximumTrackColor="Purple"
+                     Value="700"/>
+             </StackLayout>
+             <StackLayout>
+                 <Label
+                     Text="Position" />
+                 <Picker
+                     x:Name="PositionPicker">
+                     <Picker.Items>
+                         <x:String>Center</x:String>
+                         <x:String>TopLeft</x:String>
+                         <x:String>Top</x:String>
+                         <x:String>TopRight</x:String>
+                         <x:String>Right</x:String>
+                         <x:String>BottomRight</x:String>
+                         <x:String>Bottom</x:String>
+                         <x:String>BottomLeft</x:String>
+                         <x:String>Left</x:String>
+                     </Picker.Items>
+                 </Picker>
+             </StackLayout>
+             <Button
+                 Text="Show Popup"
+                 VerticalOptions="EndAndExpand" 
+                 Clicked="OnShowPopupClicked"/>
+         </StackLayout>
+     </ContentPage.Content>
+ </ContentPage> 
