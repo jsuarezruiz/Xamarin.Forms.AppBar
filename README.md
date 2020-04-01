@@ -2,6 +2,8 @@
 
 An app bar consists of a Xamarin.Forms toolbar.
 
+![Custom NavBar](images/appbar-custombackground.gif)
+
 ## AppBar
 
 | Property   |      Type      |
