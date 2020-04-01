@@ -276,6 +276,8 @@ namespace Xamarin.Forms
 
             if (propertyName == "Renderer")
                 UpdateCurrentPage();
+            else if (propertyName == FlowDirectionProperty.PropertyName)
+                UpdateFlowDirection();
         }
 
         void Initialize()
@@ -449,6 +451,8 @@ namespace Xamarin.Forms
             Grid.SetRow(_barBorder, 1);
 
             Content = _mainContainer;
+
+            UpdateFlowDirection();
         }
 
         void UpdateCurrentPage()
@@ -493,6 +497,11 @@ namespace Xamarin.Forms
                 UpdateSecondaryToolbarItems(_currentPage.ToolbarItems);
                 UpdateScrollChild(_currentPage);
             }
+        }
+
+        void UpdateFlowDirection()
+        {
+            // TODO: Manage FlowDirection changes.
         }
 
         void OnCurrentPageSizeChanged(object sender, EventArgs e)
@@ -666,6 +675,7 @@ namespace Xamarin.Forms
         {
             var scrollY = e.ScrollY;
 
+            // TODO: Improve ScrollBehavior visual effect.
             if (scrollY >= BarHeight / 2)
                 this.TranslateTo(0, 0 - BarHeight, 250, Easing.CubicOut);
             else
@@ -757,8 +767,7 @@ namespace Xamarin.Forms
                 Order = item.Order,
                 Command = item.Command,
                 CommandParameter = item.CommandParameter,
-                ToolbarItem = item,
-                Parent = this
+                ToolbarItem = item
             };
 
             _secondaryToolbarItems.Add(item, secondaryToolBarItem);

@@ -11,6 +11,7 @@ namespace Xamarin.Forms
         ToolbarItemOrder _toolbarItemOrder;
         Image _appbarItemIcon;
         Label _appbarItemText;
+        string _originalText;
         RowDefinition _appbarItemIconRow;
         RowDefinition _appbarItemTextRow;
 
@@ -161,10 +162,8 @@ namespace Xamarin.Forms
 
         void UpdateText(string text)
         {
-            if (Device.RuntimePlatform == Device.Android)
-                text = text.ToUpper();
-
-            _appbarItemText.Text = text;
+            _originalText = text;
+            _appbarItemText.Text = _originalText;
             UpdateLayout();
         }
 
@@ -186,6 +185,14 @@ namespace Xamarin.Forms
                 _appbarItemText.IsVisible = true;
                 _appbarItemIconRow.Height = GridLength.Auto;
                 _appbarItemTextRow.Height = AppBarSizes.GetToolBarItemSize();
+
+                if (_toolbarItemOrder == ToolbarItemOrder.Secondary)
+                    _appbarItemText.Text = _originalText;
+                else
+                {
+                    if (Device.RuntimePlatform == Device.Android && !string.IsNullOrEmpty(_originalText))
+                        _appbarItemText.Text = _originalText.ToUpper();
+                }
             }
             else
             {
@@ -202,7 +209,7 @@ namespace Xamarin.Forms
 
         internal virtual void OnTapped()
         {
-            // TODO: Add Ripple Effect on Android
+            // TODO: Add Ripple Effect on Android and animated highlighted view on iOS.
 
             if (ToolbarItem != null)
                 ((IMenuItemController)ToolbarItem).Activate();
