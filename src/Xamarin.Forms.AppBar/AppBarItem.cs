@@ -8,6 +8,7 @@ namespace Xamarin.Forms
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal class AppBarItem : Grid
     {
+        ToolbarItemOrder _toolbarItemOrder;
         Image _appbarItemIcon;
         Label _appbarItemText;
         RowDefinition _appbarItemIconRow;
@@ -63,6 +64,21 @@ namespace Xamarin.Forms
         static void OnTextColorChanged(BindableObject bindable, object oldValue, object newValue)
         {
             ((AppBarItem)bindable).UpdateTextColor((Color)newValue);
+        }
+
+        public static readonly BindableProperty OrderProperty =
+          BindableProperty.Create(nameof(Order), typeof(ToolbarItemOrder), typeof(AppBarItem), ToolbarItemOrder.Default,
+              propertyChanged: OnOrderChanged);
+
+        public ToolbarItemOrder Order
+        {
+            get => (ToolbarItemOrder)GetValue(OrderProperty);
+            set => SetValue(OrderProperty, value);
+        }
+
+        static void OnOrderChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((AppBarItem)bindable).UpdateOrder((ToolbarItemOrder)newValue);
         }
 
         public static readonly BindableProperty CommandProperty =
@@ -155,6 +171,12 @@ namespace Xamarin.Forms
         void UpdateTextColor(Color textColor)
         {
             _appbarItemText.TextColor = textColor;
+        }
+
+        void UpdateOrder(ToolbarItemOrder toolbarItemOrder)
+        {
+            _toolbarItemOrder = toolbarItemOrder;
+            UpdateLayout();
         }
 
         void UpdateLayout()

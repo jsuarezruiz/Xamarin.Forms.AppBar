@@ -13,8 +13,10 @@ namespace Xamarin.Forms
 {
     public class AppBar : ContentView
     {
-        Dictionary<ToolbarItem, AppBarItem> _toolbarItems;
+        Dictionary<ToolbarItem, AppBarItem> _primaryToolbarItems;
+        Dictionary<ToolbarItem, AppBarItem> _secondaryToolbarItems;
 
+        // TODO: Review Layout. Probably we can reduce the hierarchy.
         Page _currentPage;
         Grid _mainContainer;
         RowDefinition _mainContainerRow;
@@ -27,6 +29,7 @@ namespace Xamarin.Forms
         Label _navigationLabel;
         StackLayout _leftItemsContainer;
         StackLayout _rightItemsContainer;
+        Image _rightItemsIcon;
         Label _titleLabel;
         BoxView _barBorder;
         ScrollView _scrollChild;
@@ -36,7 +39,7 @@ namespace Xamarin.Forms
             Initialize();
         }
 
-        // TODO: Include HasShadow, etc. properties.
+        // TODO: Include HasShadow, PopupBackgroundColor, etc. properties.
 
         public static readonly BindableProperty BarHeightProperty =
           BindableProperty.Create(nameof(BarHeight), typeof(double), typeof(AppBar), AppBarSizes.GetDefaultBarHeight(),
@@ -277,7 +280,8 @@ namespace Xamarin.Forms
 
         void Initialize()
         {
-            _toolbarItems = new Dictionary<ToolbarItem, AppBarItem>();
+            _primaryToolbarItems = new Dictionary<ToolbarItem, AppBarItem>();
+            _secondaryToolbarItems = new Dictionary<ToolbarItem, AppBarItem>();
 
             _mainContainer = new Grid
             {
@@ -342,6 +346,10 @@ namespace Xamarin.Forms
                 Margin = AppBarSizes.GetNavigationIconMargin()
             };
 
+            var backTapGestureRecognizer = new TapGestureRecognizer();
+            backTapGestureRecognizer.Tapped += OnBackTapped;
+            _backContainer.GestureRecognizers.Add(backTapGestureRecognizer);
+
             _backContainer.Children.Add(_navigationIcon);
             Grid.SetColumn(_navigationIcon, 0);
 
@@ -356,10 +364,6 @@ namespace Xamarin.Forms
 
             _backContainer.Children.Add(_navigationLabel);
             Grid.SetColumn(_navigationLabel, 1);
-
-            var backTapGestureRecognizer = new TapGestureRecognizer();
-            backTapGestureRecognizer.Tapped += OnBackTapped;
-            _backContainer.GestureRecognizers.Add(backTapGestureRecognizer);
 
             _leftItemsContainer = new StackLayout
             {
@@ -379,11 +383,47 @@ namespace Xamarin.Forms
                 Margin = AppBarSizes.GetTitleMargin()
             };
 
+            var rightItemsContent = new Grid
+            {
+                ColumnSpacing = 0
+            };
+
+            rightItemsContent.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+            var rightItemsIconRow = new ColumnDefinition { Width = GridLength.Auto };
+            rightItemsContent.ColumnDefinitions.Add(rightItemsIconRow);
+
             _rightItemsContainer = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal
             };
 
+            var rightItemsGlyph = new FontImageSource
+            {
+                Color = BarTextColor,
+                Glyph = AppBarSizes.GetRightItemsGlyph(),
+                Size = AppBarSizes.GetNavigationFontSize(),
+                FontFamily = AppBarSizes.GetNavigationFontFamily()
+            };
+
+            _rightItemsIcon = new Image
+            {
+                Source = rightItemsGlyph,
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                IsVisible = false,
+                Margin = new Thickness(6, 0, 12, 0)
+            };
+
+            var rightItemsTapGestureRecognizer = new TapGestureRecognizer();
+            rightItemsTapGestureRecognizer.Tapped += OnRightItemsTapped;
+            _rightItemsIcon.GestureRecognizers.Add(rightItemsTapGestureRecognizer);
+
+            rightItemsContent.Children.Add(_rightItemsContainer);
+            rightItemsContent.Children.Add(_rightItemsIcon);
+
+            Grid.SetColumn(_rightItemsContainer, 0);
+            Grid.SetColumn(_rightItemsIcon, 1);
+            
             _barBorder = new BoxView
             {
                 Color = BorderColor,
@@ -394,12 +434,12 @@ namespace Xamarin.Forms
             _contentContainer.Children.Add(_backContainer);
             _contentContainer.Children.Add(_leftItemsContainer);
             _contentContainer.Children.Add(_titleLabel);
-            _contentContainer.Children.Add(_rightItemsContainer);
+            _contentContainer.Children.Add(rightItemsContent);
 
             Grid.SetColumn(_backContainer, 0);
             Grid.SetColumn(_leftItemsContainer, 1);
             Grid.SetColumn(_titleLabel, 2);
-            Grid.SetColumn(_rightItemsContainer, 3);
+            Grid.SetColumn(rightItemsContent, 3);
 
             _mainContainer.Children.Add(_backgroundContainer);
             _mainContainer.Children.Add(_contentContainer);
@@ -440,6 +480,7 @@ namespace Xamarin.Forms
                     UpdateBarTextColor(navigationPage.BarTextColor);
                 }
             }
+
             if (_currentPage != null)
             {
                 // TODO: Unsubscribe Page events
@@ -448,7 +489,8 @@ namespace Xamarin.Forms
                 ((ObservableCollection<ToolbarItem>)_currentPage.ToolbarItems).CollectionChanged += OnToolbarItemsChanged;
 
                 UpdateTitle(_currentPage.Title);
-                UpdateToolbarItems(_currentPage.ToolbarItems);
+                UpdatePrimaryToolbarItems(_currentPage.ToolbarItems);
+                UpdateSecondaryToolbarItems(_currentPage.ToolbarItems);
                 UpdateScrollChild(_currentPage);
             }
         }
@@ -484,7 +526,8 @@ namespace Xamarin.Forms
         void OnToolbarItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // TODO: Avoid redoing the entire collection again!
-            UpdateToolbarItems(_currentPage.ToolbarItems);
+            UpdatePrimaryToolbarItems(_currentPage.ToolbarItems);
+            UpdateSecondaryToolbarItems(_currentPage.ToolbarItems);
         }
 
         void UpdateBarHeight(double barHeight)
@@ -521,7 +564,13 @@ namespace Xamarin.Forms
             _navigationLabel.TextColor = barTextColor;
             _titleLabel.TextColor = barTextColor;
 
-            foreach (var toolbarItem in _toolbarItems)
+            foreach (var toolbarItem in _primaryToolbarItems)
+            {
+                if (toolbarItem.Value is AppBarItem appBarItem)
+                    appBarItem.TextColor = barTextColor;
+            }
+
+            foreach (var toolbarItem in _secondaryToolbarItems)
             {
                 if (toolbarItem.Value is AppBarItem appBarItem)
                     appBarItem.TextColor = barTextColor;
@@ -623,48 +672,96 @@ namespace Xamarin.Forms
                 this.TranslateTo(0, 0, 50, Easing.CubicIn);
         }
 
-        void UpdateToolbarItems(IList<ToolbarItem> toolBarItems)
+        void UpdatePrimaryToolbarItems(IList<ToolbarItem> toolBarItems)
         {
-            ClearToolBars();
+            ClearPrimaryToolBarItems();
 
             // TODO: Avoid using Linq here
-            foreach (var toolBarItem in toolBarItems
-                .Where(tbi => tbi.Order != ToolbarItemOrder.Secondary)
-                .OrderBy(tbi => tbi.Priority))
+            foreach (var toolBarItem in toolBarItems.OrderBy(tbi => tbi.Priority))
             {
-                toolBarItem.PropertyChanged += OnToolBarItemPropertyChanged;
+                if (toolBarItem.Order == ToolbarItemOrder.Default || toolBarItem.Order == ToolbarItemOrder.Primary)
+                {
+                    toolBarItem.PropertyChanged += OnToolBarItemPropertyChanged;
 
-                // TODO: Add support to Secondary ToolbarItems (Popups).
-                AddToolBarItem(toolBarItem);
+                    AddPrimaryToolBarItem(toolBarItem);
+                }
             }
         }
-               
-        void ClearToolBars()
+
+        void UpdateSecondaryToolbarItems(IList<ToolbarItem> toolBarItems)
         {
-            foreach (var toolbarItem in _toolbarItems)
+            ClearSecondaryToolBarItems();
+
+            int rightItemsCount = 0;
+
+            // TODO: Avoid using Linq here
+            foreach (var toolBarItem in toolBarItems.OrderBy(tbi => tbi.Priority))
+            {
+                if (toolBarItem.Order == ToolbarItemOrder.Secondary)
+                {
+                    toolBarItem.PropertyChanged += OnToolBarItemPropertyChanged;
+
+                    AddSecondaryToolBarItem(toolBarItem);
+
+                    rightItemsCount++;
+                }
+            }
+
+            if (Device.RuntimePlatform == Device.Android)
+                _rightItemsIcon.IsVisible = rightItemsCount > 0;
+        }
+
+        void ClearPrimaryToolBarItems()
+        {
+            foreach (var toolbarItem in _primaryToolbarItems)
                 toolbarItem.Key.PropertyChanged -= OnToolBarItemPropertyChanged;
 
-            _toolbarItems.Clear();
+            _primaryToolbarItems.Clear();
             _leftItemsContainer.Children.Clear();
             _rightItemsContainer.Children.Clear();
         }
 
-        void AddToolBarItem(ToolbarItem item)
+        void ClearSecondaryToolBarItems()
         {
-            var toolBarItem = new AppBarItem
+            foreach (var toolbarItem in _secondaryToolbarItems)
+                toolbarItem.Key.PropertyChanged -= OnToolBarItemPropertyChanged;
+
+            _secondaryToolbarItems.Clear();
+        }
+
+        void AddPrimaryToolBarItem(ToolbarItem item)
+        {
+            var primaryToolBarItem = new AppBarItem
             {
                 AutomationId = item.AutomationId,
                 IconImageSource = item.IconImageSource,
                 Text = item.Text,
                 TextColor = BarTextColor,
+                Order = item.Order,
+                Command = item.Command,
+                CommandParameter = item.CommandParameter,
+                ToolbarItem = item
+            };
+
+            _rightItemsContainer.Children.Add(primaryToolBarItem);
+            _primaryToolbarItems.Add(item, primaryToolBarItem);
+        }
+
+        void AddSecondaryToolBarItem(ToolbarItem item)
+        {
+            var secondaryToolBarItem = new AppBarItem
+            {
+                AutomationId = item.AutomationId,
+                Text = item.Text,
+                TextColor = BarTextColor,
+                Order = item.Order,
                 Command = item.Command,
                 CommandParameter = item.CommandParameter,
                 ToolbarItem = item,
                 Parent = this
             };
 
-            _rightItemsContainer.Children.Add(toolBarItem);
-            _toolbarItems.Add(item, toolBarItem);
+            _secondaryToolbarItems.Add(item, secondaryToolBarItem);
         }
 
         void OnToolBarItemPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -681,7 +778,7 @@ namespace Xamarin.Forms
 
         void UpdateToolbarItemText(ToolbarItem toolBarItem)
         {
-            _toolbarItems.TryGetValue(toolBarItem, out AppBarItem appBarItem);
+            var appBarItem = GetToolBarItem(toolBarItem);
 
             if (appBarItem != null)
             {
@@ -691,7 +788,7 @@ namespace Xamarin.Forms
 
         void UpdateToolbarItemIcon(ToolbarItem toolBarItem)
         {
-            _toolbarItems.TryGetValue(toolBarItem, out AppBarItem appBarItem);
+            var appBarItem = GetToolBarItem(toolBarItem);
 
             if (appBarItem != null)
             {
@@ -701,12 +798,27 @@ namespace Xamarin.Forms
 
         void UpdateToolbarItemIsEnabled(ToolbarItem toolBarItem)
         {
-            _toolbarItems.TryGetValue(toolBarItem, out AppBarItem appBarItem);
+            var appBarItem = GetToolBarItem(toolBarItem);
 
             if (appBarItem != null)
             {
                 appBarItem.IsEnabled = toolBarItem.IsEnabled;
             }
+        }
+
+        AppBarItem GetToolBarItem(ToolbarItem toolBarItem)
+        {
+            _primaryToolbarItems.TryGetValue(toolBarItem, out AppBarItem primaryAppBarItem);
+
+            if (primaryAppBarItem != null)
+                return primaryAppBarItem;
+
+            _secondaryToolbarItems.TryGetValue(toolBarItem, out AppBarItem secondaryAppBarItem);
+
+            if (secondaryAppBarItem != null)
+                return secondaryAppBarItem;
+
+            return null;
         }
 
         internal virtual void OnBackTapped(EventArgs e)
@@ -726,6 +838,11 @@ namespace Xamarin.Forms
             OnBackTapped(e);
 
             _currentPage.Navigation.PopAsync();
+        }
+
+        void OnRightItemsTapped(object sender, EventArgs e)
+        {
+            // TODO: Open Popup in Android, secondary bar in iOS, etc.
         }
     }
 }

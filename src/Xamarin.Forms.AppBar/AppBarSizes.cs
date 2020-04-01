@@ -57,6 +57,11 @@ namespace Xamarin.Forms
             return string.Empty;
         }
 
+        public static string GetRightItemsGlyph()
+        {
+            return "\uF1D9";
+        }
+
         public static string GetNavigationGlyph()
         {
             if (Device.RuntimePlatform == Device.Android)
